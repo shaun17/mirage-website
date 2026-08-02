@@ -1,0 +1,74 @@
+{
+  "category": "webpage",
+  "duration_s": 7.2,
+  "fps": 30,
+  "canvas": {
+    "w": 1920,
+    "h": 1200,
+    "aspect": "16:10"
+  },
+  "style": "full-frame native macOS product demo; the real Mirage window is the sole focal point with no decorative overlay",
+  "palette": ["#F5F5F7", "#171717", "#1677FF"],
+  "font": "none; product UI only",
+  "beats": [0.72, 1.84, 4.08, 6.28],
+  "export": "mp4",
+  "asset_needs": [
+    {
+      "role": "finder-state",
+      "kind": "web",
+      "source": "assets/mirage-in-finder.jpg",
+      "treatment": "none",
+      "status": "user-supplied-frozen"
+    },
+    {
+      "role": "discover-state",
+      "kind": "web",
+      "source": "assets/mirage-discover-full.jpg",
+      "treatment": "none",
+      "status": "user-supplied-frozen"
+    },
+    {
+      "role": "details-state",
+      "kind": "web",
+      "source": "assets/mirage-image-detail.jpg",
+      "treatment": "none",
+      "status": "user-supplied-frozen"
+    }
+  ],
+  "block": null,
+  "customize": {
+    "hand_authored_gap": "No registry block matches a three-state real macOS screenshot loop; use existing HyperFrames animation rules directly.",
+    "animation_rules": [
+      "cursor-click-ripple",
+      "push-slide-transition"
+    ],
+    "constraints": [
+      "Do not recolor, filter, redraw, or fabricate product UI",
+      "Use only one precise cursor click on the first real image card",
+      "Return the Discover window to its exact opening state before 7.2s"
+    ]
+  },
+  "content": {
+    "url": null,
+    "capture": "assets/mirage-discover-full.jpg",
+    "highlights": [
+      {
+        "region": {
+          "source_image": "assets/mirage-discover-full.jpg",
+          "x": 330,
+          "y": 204,
+          "coordinate_space": "1163x720-source"
+        },
+        "label": "FIRST IMAGE"
+      }
+    ],
+    "shot_brief": "The viewer begins in Mirage Discover. A cursor selects the first real image, the source-detail drawer appears, and the same material becomes available through Finder. A short final return to Discover closes the 7.2-second website loop without a jump.",
+    "rhythm": "hold-click-detail-hold-finder-hold-return",
+    "states": [
+      { "id": "discover", "start": 0.0, "end": 1.84, "label": "DISCOVER" },
+      { "id": "details", "start": 1.84, "end": 4.08, "label": "SOURCE DETAILS" },
+      { "id": "finder", "start": 4.08, "end": 6.28, "label": "IN FINDER" },
+      { "id": "discover-return", "start": 6.28, "end": 7.2, "label": "DISCOVER" }
+    ]
+  }
+}
