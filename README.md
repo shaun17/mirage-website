@@ -1,166 +1,147 @@
----
-tags:
-  - project
-  - typescript
-  - product-website
-  - nextjs
-created: 2026-08-02
----
-
 <p align="center">
-  <img src="./public/media/mirage-icon.png" alt="Mirage 图标" width="112" height="112">
+  <img src="./public/media/mirage-icon.png" alt="Mirage App 图标" width="128" height="128">
 </p>
 
-<h1 align="center">Mirage Website</h1>
+<h1 align="center">Mirage</h1>
+
+<p align="center"><strong>网络图片，直接出现在 macOS 上传框里。</strong></p>
 
 <p align="center">
-  Mirage 的产品官网：用真实的 macOS 窗口截图与短视频，说明网络图片如何直接进入 Finder 和系统文件选择器。
+  发现 Openverse 图片与 DiceBear 头像，核对来源，按需收藏，再从 Finder 或系统文件面板直接选择。<br>
+  不必先下载、整理文件，再回到原来的窗口上传。
 </p>
-
-> [!info]
-> 这是官网源码仓库；Mirage macOS 应用本体位于 [`shaun17/Mirage`](https://github.com/shaun17/Mirage)。
-
-**仓库：** [`shaun17/mirage-website`](https://github.com/shaun17/mirage-website)<br>
-**版本：** `0.1.0`<br>
-**语言：** TypeScript / React<br>
-**运行环境：** Node.js `22.13.0+`<br>
-**本地地址：** `http://localhost:3000`
-
-## 整体架构
-
-```mermaid
-graph LR
-  subgraph source[源码层]
-    page[App Router 页面]
-    demo[视频交互组件]
-    media[本地产品媒体]
-    video[HyperFrames 工程]
-  end
-
-  subgraph build[构建层]
-    vinext[Vinext + Vite]
-  end
-
-  subgraph runtime[运行层]
-    worker[Cloudflare Worker]
-    browser[浏览器]
-  end
-
-  video -->|渲染| media
-  page --> demo
-  page --> vinext
-  demo --> vinext
-  media --> vinext
-  vinext --> worker
-  worker --> browser
-```
-
-> [!note]
-> 官网不热链产品素材。图标、窗口截图和演示视频均随仓库提供；视频源工程与最终 MP4 分开保留，方便后续重新剪辑。
-
-## 目录结构
-
-```text
-mirage-website/
-├── app/
-│   ├── components/       # 产品演示视频及播放状态
-│   ├── globals.css       # 页面视觉、响应式布局与动效
-│   ├── layout.tsx        # 元数据、站点图标与根布局
-│   └── page.tsx          # 单页产品官网
-├── public/media/         # Logo、真实应用截图与最终演示视频
-├── videos/mirage-app-loop/
-│   ├── assets/           # 视频工程使用的本地素材
-│   ├── index.html        # HyperFrames 场景实现
-│   └── shot-plan.json    # 镜头节奏与画面规划
-├── worker/index.ts       # Cloudflare Worker 入口
-├── tests/                # 构建产物与本地媒体验证
-├── vite.config.ts        # Vinext、Vite 与 Cloudflare 配置
-└── package.json          # Node.js 脚本与依赖版本
-```
-
-## 技术栈速查
-
-| 层级 | 技术 | 版本 | 用途 |
-| --- | --- | --- | --- |
-| 运行时 | Node.js | `22.13.0+` | 本地开发与构建 |
-| 页面 | Next.js / React | `16.2.12` / `19.2.6` | App Router 页面与客户端交互 |
-| 构建 | Vinext / Vite | `0.0.50` / `8.0.13` | 将 Next.js 页面构建到 Cloudflare 运行时 |
-| 样式 | Tailwind CSS | `4.2.1` | CSS 构建链；主要视觉规则位于 `app/globals.css` |
-| 部署适配 | Cloudflare Vite Plugin / Wrangler | `1.37.1` / `4.92.0` | Worker 本地运行与构建 |
-| 语言 | TypeScript | `5.9.3` | 页面、组件与 Worker 类型检查基础 |
-
-## 核心特点
-
-| 特点 | 说明 |
-| --- | --- |
-| 真实产品画面 | 只使用 Mirage 本机窗口截图，不用概念图代替产品界面 |
-| 视频优先的 Hero | 桌面端采用左右布局，并把更高视觉权重留给产品演示 |
-| 本地媒体交付 | Logo、截图与 MP4 位于 `public/media/`，不依赖第三方图床 |
-| 尊重动态偏好 | 检测 `prefers-reduced-motion`；减少动态时用 Finder 静态图替代视频 |
-| 按可见性播放 | 演示离开视口后自动暂停，同时保留手动播放与暂停按钮 |
-| 可验证构建 | Node 测试检查首页 HTML、产品链接和全部必需媒体文件 |
-
-## 产品内容与媒体
 
 <p align="center">
-  <img src="./public/media/mirage-in-finder.jpg" alt="Mirage 出现在 Finder 侧边栏与文件区域中" width="900">
+  <a href="https://github.com/shaun17/Mirage/releases/tag/v0.3.0"><strong>下载 Mirage 0.3.0</strong></a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="https://github.com/shaun17/Mirage">应用源码</a>
 </p>
 
-| 资源 | 路径 | 用途 |
-| --- | --- | --- |
-| Mirage Logo | `public/media/mirage-icon.png` | README 图标、网站品牌标识与页面 favicon |
-| 产品截图 | `public/media/mirage-*.jpg` | Hero 海报、Finder 场景与功能模块 |
-| 演示视频 | `public/media/mirage-app-loop.mp4` | Hero 中循环播放的 7 秒产品路径演示 |
-| 视频源工程 | `videos/mirage-app-loop/` | 调整镜头、素材与节奏后重新生成 MP4 |
+<p align="center"><sub>macOS 14+ · 支持 Apple Silicon 与 Intel Mac</sub></p>
 
-官网讲述的是 Mirage 的核心路径：发现 Openverse 图片或 DiceBear 头像，收藏后在 Finder 与系统文件面板中直接选择，并在真正选择时才获取原图。
+<p align="center">
+  <img src="./public/media/mirage-discover-full.jpg" alt="Mirage 主应用中的图片发现界面" width="1040">
+</p>
 
-## 本地运行
+## 少一次下载，少一次整理
+
+Mirage 是一款 macOS 图片素材工具。主应用负责发现、搜索、查看来源和收藏素材；内置的 File Provider 扩展则让 Mirage 出现在 Finder 与系统文件面板的“位置”中。
+
+打开网页或 App 的上传框时，可以直接进入 Mirage 选择素材。只有真正选中后，Mirage 才会获取远程内容，并交付标准化的 PNG 文件。
+
+## 从发现到上传
+
+1. **发现素材** — 按“头像”“图片”或“全部”筛选，搜索 Openverse 图片与 DiceBear 头像。
+2. **核对并收藏** — 查看作者、来源页和许可证信息，把可能会用到的内容加入收藏。
+3. **直接选择** — 在上传面板左侧的“位置”中打开 Mirage，从推荐内容、头像、收藏或最近使用中选择。
+
+最终上传仍由目标 App 或网页完成；Mirage 只负责把远程素材交给 macOS 文件面板。
+
+## 主要功能
+
+- **搜索与连续浏览** — 搜索图片或头像，并通过分页和“更多图片”继续查看结果。
+- **Finder 与文件面板接入** — 不离开当前上传流程，直接从系统文件面板选择素材。
+- **收藏与最近使用** — 主应用中的收藏会同步到文件面板；成功交付的图片会进入最近使用。
+- **来源信息可查** — 在详情中查看作者、来源页、许可证和使用提醒。
+- **按需获取内容** — 预览与收藏不会制造临时原图，选中素材时才完成文件交付。
+- **统一 PNG 输出** — 校验源文件、修正方向并居中裁切，输出 512 × 512 sRGB PNG，同时移除源文件元数据。
+
+<p align="center">
+  <img src="./public/media/mirage-in-finder.jpg" alt="Mirage 作为一个位置出现在 Finder 中" width="1040">
+</p>
+
+## 安装
+
+当前正式版本为 `0.3.0`。公开安装包已验证为 Apple Silicon 与 Intel 通用构建，并完成 Developer ID 签名和 Apple 公证。
+
+1. 下载 [`Mirage-0.3.0.dmg`](https://github.com/shaun17/Mirage/releases/download/v0.3.0/Mirage-0.3.0.dmg)。
+2. 打开 DMG，将 Mirage 拖入 `Applications`。
+3. 首次启动 Mirage，等待文件提供程序完成初始化。
+4. 如果应用提示扩展尚未启用，请前往“系统设置 → 通用 → 登录项与扩展 → 文件提供程序”，启用 Mirage。
+
+<details>
+<summary>校验下载文件</summary>
+
+同时下载 [`Mirage-0.3.0.dmg.sha256`](https://github.com/shaun17/Mirage/releases/download/v0.3.0/Mirage-0.3.0.dmg.sha256)，将两个文件放在同一目录后运行：
 
 ```bash
-git clone https://github.com/shaun17/mirage-website.git
-cd mirage-website
+shasum -a 256 -c Mirage-0.3.0.dmg.sha256
+```
+
+</details>
+
+## 快速开始
+
+1. 打开 Mirage，浏览或搜索图片，按需收藏素材。
+2. 在目标 App 或网页中打开上传框。
+3. 在系统文件面板左侧的“位置”中选择 Mirage。
+4. 打开推荐内容、“头像”“收藏”或“最近使用”；需要继续浏览时进入“更多图片”。
+5. 选中素材。Mirage 会准备 512 × 512 PNG，再由目标 App 完成上传。
+
+## Mirage 如何进入文件面板
+
+```mermaid
+flowchart LR
+  app["Mirage 主应用<br>发现 · 搜索 · 收藏"]
+  group["App Group<br>共享收藏与快照"]
+  provider["File Provider<br>目录 · 缩略图 · 交付"]
+  picker["Finder / 文件面板"]
+  output["512 × 512 PNG"]
+  target["目标 App"]
+
+  app --> group --> provider --> picker
+  picker -->|选中素材| provider
+  provider --> output --> target
+```
+
+主应用与 File Provider 通过 App Group 共享收藏、最近使用和推荐快照。File Provider 是只读素材入口：它可以枚举、预览和交付内容，但不会创建、修改或删除远端素材。
+
+## 系统要求
+
+- macOS 14.0 或更高版本。
+- 新搜索、图片预览和首次获取远程素材通常需要网络连接。
+- File Provider 的动态字符串搜索需要 macOS 26 或更高版本；旧系统仍可浏览已枚举内容并使用系统本地索引。
+- File Provider 必须处于启用状态；Mirage 会在主应用中显示当前状态和设置入口。
+
+## 数据、隐私与素材来源
+
+- 当前实现没有账号系统，也没有引入分析或遥测 SDK。
+- Openverse 搜索会通过 HTTPS 把图片搜索词发送到 `api.openverse.org`；Mirage 当前只接纳 CC0 1.0 与 Public Domain Mark 图片记录。
+- DiceBear 的原始搜索文字只在本地用于生成 SHA-256 seed，远程头像 URL 不包含原始查询文字。
+- Openverse 的缩略图和源图可能来自结果所指向的第三方 HTTPS 图片主机。
+- 收藏、最近使用、推荐快照、同步状态和 File Provider 搜索数据以 JSON 保存在沙盒 App Group 中，没有额外的应用层加密。
+- 输出 PNG 不保留来源和许可证元数据。使用素材前，仍需在详情或来源页核对署名、肖像权、商标权及其他适用限制。
+
+Mirage 展示的来源和许可证信息用于协助核对，不构成法律保证；DiceBear 不同头像风格的许可也可能不同。
+
+## 当前限制
+
+- Mirage 是只读素材入口，不是云盘或通用文件管理器。
+- 输出固定为居中裁切后的 512 × 512 PNG，不保留原始尺寸、格式或 EXIF。
+- 源图下载上限为 20 MiB、1 亿像素，并只接受受支持的图片格式。
+- 外部服务可能出现网络错误、限流、内容下架或元数据变化。
+- 内容安全过滤依赖来源服务提供的标记和文字元数据，不能保证所有结果都适合所有用户。
+
+## 本仓库：Mirage 官网
+
+本仓库包含 Mirage 产品官网源码，应用本体与 File Provider 扩展位于 [`shaun17/Mirage`](https://github.com/shaun17/Mirage)。官网中的 Logo、窗口截图和演示视频都保存在 `public/media/`，不依赖第三方图床。
+
+本地开发需要 Node.js `22.13.0+`：
+
+```bash
 npm ci
 npm run dev
 ```
 
-浏览器打开 `http://localhost:3000`。
-
-## CLI 命令速查
-
-| 命令 | 功能 |
-| --- | --- |
-| `npm run dev` | 启动本地开发服务器 |
-| `npm run build` | 生成 Cloudflare 兼容的生产构建 |
-| `npm run start` | 本地运行生产构建 |
-| `npm run lint` | 检查页面、Worker 与构建配置 |
-| `npm test` | 先构建，再验证渲染 HTML 与全部必需媒体 |
-
-## 配置参考
-
-| 配置 | 当前值 | 说明 |
-| --- | --- | --- |
-| `engines.node` | `>=22.13.0` | 低于此版本不在项目支持范围内 |
-| `WRANGLER_LOG_PATH` | `.wrangler/wrangler.log` | npm 脚本将 Wrangler 日志保存在项目内 |
-| `compatibility_flags` | `nodejs_compat` | Worker 构建启用 Node.js 兼容层 |
-| `.openai/hosting.json` → `d1` | `null` | 当前不绑定 Cloudflare D1 |
-| `.openai/hosting.json` → `r2` | `null` | 当前不绑定 Cloudflare R2 |
-
-## 构建与部署目标
+浏览器打开 `http://localhost:3000`。提交前运行：
 
 ```bash
 npm run lint
 npm test
 ```
 
-`npm test` 会执行生产构建，并用 Node.js 测试读取 `dist/server/index.js`。项目已配置 Cloudflare Worker 入口与 Vite 插件，但仓库当前没有部署脚本，也不包含部署凭据；本地验收完成后再单独接入 Cloudflare 发布流程。
+`npm test` 会完成生产构建，并验证首页 HTML 与必需的本地媒体文件。项目构建目标为 Cloudflare Worker；本仓库当前没有自动部署脚本，也不包含部署凭据。
 
-## 关键边界与约束
+## 许可证
 
-| 边界 | 说明 |
-| --- | --- |
-| 官网与应用分离 | 本仓库只包含产品官网；macOS App、File Provider 扩展与安装包不在这里 |
-| 无服务端业务数据 | 当前没有账号系统、数据库、对象存储或业务 API |
-| 安装包尚未发布 | 页面下载入口目前指向 Mirage 源码仓库，等待正式 GitHub Release |
-| 媒体必须本地存在 | 删除或改名 `public/media/` 中的必需资源会导致自动测试失败 |
-| 产品系统要求 | 官网可在现代浏览器访问；页面中标注的 `macOS 14+` 是 Mirage App 的要求 |
+本仓库与 Mirage 应用仓库当前均未包含 `LICENSE` 文件，因此不声明任何开源许可证。
