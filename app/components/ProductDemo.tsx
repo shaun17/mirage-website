@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/** 播放 Mirage 从主应用进入 Finder 的短循环，并遵循系统减少动态效果设置。 */
 export function ProductDemo() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const [playing, setPlaying] = useState(true);
@@ -9,6 +10,7 @@ export function ProductDemo() {
   const userPaused = useRef(false);
 
   useEffect(() => {
+    // 用户选择减少动态效果时，以 Finder 静态界面替代自动播放视频。
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const updatePreference = () => setReduceMotion(mediaQuery.matches);
 
@@ -18,6 +20,7 @@ export function ProductDemo() {
   }, []);
 
   useEffect(() => {
+    // 视频离开视口后暂停，避免页面下方继续解码和占用资源。
     const video = videoRef.current;
     if (!video || reduceMotion) return;
 
@@ -37,6 +40,7 @@ export function ProductDemo() {
     return () => observer.disconnect();
   }, [reduceMotion]);
 
+  /** 在用户主动操作后切换视频播放状态，并保留手动暂停选择。 */
   const togglePlayback = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -75,8 +79,8 @@ export function ProductDemo() {
         loop
         playsInline
         preload="metadata"
-        poster="/media/mirage-discover-full.jpg"
-        aria-label="Mirage 在主应用与 Finder 之间工作的短循环演示"
+        poster="/media/mirage-in-finder.jpg"
+        aria-label="Mirage 将在线图片通过 File Provider 呈现在 Finder 中的短循环演示"
       >
         <source src="/media/mirage-app-loop.mp4" type="video/mp4" />
       </video>

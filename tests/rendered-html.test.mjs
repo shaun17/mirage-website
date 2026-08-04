@@ -29,9 +29,12 @@ test("renders the Mirage product homepage", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Mirage — 让网络图片直接出现在 Mac 上传框<\/title>/i);
+  assert.match(html, /<title>Mirage — 网络图片直接进入 macOS 文件选择器<\/title>/i);
   assert.match(html, /网络图片/);
-  assert.match(html, /直接出现在上传框里/);
+  assert.match(html, /直接在文件选择器里用/);
+  assert.match(html, /File Provider/);
+  assert.match(html, /选中哪一张，才请求哪一张/);
+  assert.match(html, /下载文件夹，不再是图片的必经之路/);
   assert.match(html, /https:\/\/github\.com\/shaun17\/Mirage/);
   assert.match(html, /mirage-in-finder\.jpg/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/i);
