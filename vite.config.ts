@@ -6,7 +6,7 @@ import { sites } from "./build/sites-vite-plugin.ts";
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 const WORKER_NAME = "mirage-website";
-const COMPATIBILITY_DATE = "2026-08-02";
+const COMPATIBILITY_DATE = "2026-05-22";
 
 const { d1, r2 } = hostingConfig;
 
