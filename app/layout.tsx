@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Mirage — 网络图片直接进入 macOS 文件选择器",
     description:
-      "Mirage 是基于 File Provider 的 macOS 图片请求工具。网络图片无需提前下载，系统请求具体文件内容时再按需获取。",
+      "在 Finder 中选择网络图片和头像，在 App 内浏览 GIF。",
     icons: {
       icon: "/media/mirage-icon.png",
       shortcut: "/media/mirage-icon.png",
@@ -23,8 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: "Mirage — 网络图片，直接在文件选择器里用",
-      description:
-        "通过 File Provider 按需请求图片，减少下载文件夹中的临时原图。",
+      description: "图片和头像按需进入 Finder；GIF 在 App 内浏览。",
       type: "website",
       locale: "zh_CN",
       images: [{ url: socialImage, width: 1200, height: 630, alt: "Mirage 产品官网预览" }],
@@ -32,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Mirage — 网络图片，直接在文件选择器里用",
-      description: "系统请求哪一张，再按需获取哪一张。",
+      description: "图片和头像进 Finder，GIF 留在 App。",
       images: [socialImage],
     },
   };

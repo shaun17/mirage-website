@@ -1,18 +1,18 @@
-/** 展示从当前安装版 Mirage 获取的 Finder 实机画面。 */
+/** 展示从当前安装版 Mirage 获取的 Finder 画面。 */
 export function ProductDemo() {
   return (
     <figure className="demo-shell">
       <img
         className="demo-media"
         src="/media/mirage-in-finder.jpg"
-        alt="Finder 侧边栏中的 Mirage 位置，以及尚未物化交付文件的图片与头像条目"
+        alt="Finder 中打开的 Mirage，每行显示六个文件夹或图片项目"
         width="920"
         height="504"
         fetchPriority="high"
       />
       <figcaption className="demo-caption">
-        <span>Finder / Mirage</span>
-        <span>通过 File Provider 作为系统位置出现</span>
+        <span>Finder「位置」→ Mirage</span>
+        <span>直接选择图片与头像</span>
       </figcaption>
     </figure>
   );
