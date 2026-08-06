@@ -1,41 +1,32 @@
 import "./globals.css";
-import type { Metadata } from "next";
-import { headers } from "next/headers";
 
-/** 根据当前访问域名生成绝对分享图地址，兼容本地预览与正式域名。 */
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const forwardedHost = requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim();
-  const host = forwardedHost || requestHeaders.get("host");
-  const protocol =
-    requestHeaders.get("x-forwarded-proto")?.split(",")[0]?.trim() ||
-    (host?.startsWith("localhost") ? "http" : "https");
-  const socialImage = host ? `${protocol}://${host}/og.png` : "/og.png";
+const siteUrl = "https://mirage.wenmsg.fun";
+const socialImage = `${siteUrl}/og.png`;
 
-  return {
-    title: "Mirage — 网络图片直接进入 macOS 文件选择器",
-    description:
-      "在 Finder 中选择网络图片和头像，在 App 内浏览 GIF。",
-    icons: {
-      icon: "/media/mirage-icon.png",
-      shortcut: "/media/mirage-icon.png",
-      apple: "/media/mirage-icon.png",
-    },
-    openGraph: {
-      title: "Mirage — 网络图片，直接在文件选择器里用",
-      description: "图片和头像按需进入 Finder；GIF 在 App 内浏览。",
-      type: "website",
-      locale: "zh_CN",
-      images: [{ url: socialImage, width: 1200, height: 630, alt: "Mirage 产品官网预览" }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Mirage — 网络图片，直接在文件选择器里用",
-      description: "图片和头像进 Finder，GIF 留在 App。",
-      images: [socialImage],
-    },
-  };
-}
+// 站点使用 vinext 构建，因此 metadata 保持为静态对象，不依赖 Next.js 运行时模块。
+export const metadata = {
+  title: "Mirage — 网络图片直接进入 macOS 文件选择器",
+  description: "在 Finder 中选择网络图片和头像，在 App 内浏览 GIF。",
+  icons: {
+    icon: "/media/mirage-icon.png",
+    shortcut: "/media/mirage-icon.png",
+    apple: "/media/mirage-icon.png",
+  },
+  openGraph: {
+    title: "Mirage — 网络图片，直接在文件选择器里用",
+    description: "图片和头像按需进入 Finder；GIF 在 App 内浏览。",
+    type: "website",
+    locale: "zh_CN",
+    url: siteUrl,
+    images: [{ url: socialImage, width: 1200, height: 630, alt: "Mirage 产品官网预览" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mirage — 网络图片，直接在文件选择器里用",
+    description: "图片和头像进 Finder，GIF 留在 App。",
+    images: [socialImage],
+  },
+};
 
 /** 渲染站点根文档，并为所有页面统一设置中文语言环境。 */
 export default function RootLayout({
