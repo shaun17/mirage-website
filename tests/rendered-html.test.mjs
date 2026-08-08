@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
+async function render(pathname = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(new URL(pathname, "http://localhost/"), {
       headers: { accept: "text/html" },
     }),
     {
@@ -84,4 +84,18 @@ test("ships the required local product assets", async () => {
   ];
 
   await Promise.all(requiredAssets.map((asset) => access(new URL(asset, import.meta.url))));
+});
+
+test("renders the public Mirage privacy policy", async () => {
+  const response = await render("/privacy");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+  assert.match(html, /<title>Mirage 隐私政策<\/title>/i);
+  assert.match(html, /不要求注册账户/);
+  assert.match(html, /不使用广告、行为分析或跨应用追踪服务/);
+  assert.match(html, /App Group/);
+  assert.match(html, /第三方服务/);
+  assert.match(html, /GitHub Issues/);
 });

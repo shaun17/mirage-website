@@ -188,6 +188,7 @@ export default function Home() {
         </a>
         <div className="footer-meta">
           <span>macOS 14+</span>
+          <a href="/privacy">隐私政策</a>
           <a href={githubUrl} target="_blank" rel="noreferrer">
             GitHub
           </a>
